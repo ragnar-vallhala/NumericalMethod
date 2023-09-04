@@ -20,6 +20,28 @@ class Matrix:
 
         self.shape = (n,k)
 
+    def __init__(self,shape,attribute):
+        self.shape = shape
+        if attribute=="Zeros":
+            for i in range(shape[0]):
+                self.mat.append([0]*shape[1])
+        
+        elif attribute=="Ones":
+            for i in range(shape[0]):
+                self.mat.append([1]*shape[1])
+
+        elif attribute=="Identity":
+            if self.shape[0]!=self.shape[1]:
+                raise "Not a square matrix"
+            
+            for i in range(shape[0]):
+                self.mat.append([0]*shape[1])
+
+            for i in range(shape[0]):
+                self.mat[i][i]=1
+        else:
+            raise "Invalid arg"
+
 
 
     def __str__(self) -> str:
@@ -88,16 +110,36 @@ class Matrix:
             
             ans.append((d[i]-sigma)/self.mat[i][i])
         return ans
-               
+
+    
+
+    def LUdecompose(self) -> tuple:
+        """
+        Not finished
+        """
+        L = Matrix(self.shape,"Zeros")
+        U = Matrix(self.shape,"Identity")
+
+        for i in range(self.shape[0]):
+            L[i][1] = self.mat[i][1]
+
+        for i in range(1,self.shape[0]):
+            U[1][i] = self.mat[1][i]/L[1][1]
+        
+        for i in range(1,self.shape[0]-1):
+            for j in range(i,self.shape[0]):
+                L[i][j] = self.mat[i][j]
+                for k in range(0,j):
+                    L[i][j]-=L[i][k]*U[k][j]
+
 
 
 def main():
     arr = [[1,0,0],[3,5,0],[2,3,1]]
 
-    mat = Matrix(arr)
-
-    print(mat.isLowerTriangular())
-    print(mat.solveLowerTriangular([2,16,12]))
+    mat = Matrix((5,5),"Identity")
+    print(mat)
+    
 
 main()
         
